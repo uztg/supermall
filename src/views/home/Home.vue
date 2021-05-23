@@ -1,6 +1,6 @@
 <template>
   <div id="home">
-    你好
+    你好啊
   </div>
 </template>
 <script>

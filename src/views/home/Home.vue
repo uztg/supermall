@@ -2,30 +2,40 @@
 <div id="home">
 <router-view />
 <nav-bar class="home-nav" ><div slot="center">购物街</div></nav-bar>
-<home-swiper :banners="banners" />
-<recommend-view :recommends="recommends"/>
-<feature-view class="feature" />
-<tab-control class="tab-control" :titles="['流行','新款','精选']" @tabClick="tabClick"/>
-<goods-list :goods="showGoods"/>
+  <scroll class="content">
+    <home-swiper :banners="banners" />
+    <recommend-view :recommends="recommends"/>
+    <feature-view class="feature" />
+    <tab-control class="tab-control" :titles="['流行','新款','精选']" @tabClick="tabClick"/>
+    <goods-list :goods="showGoods"/>
+  </scroll>
+  <back-top class="back-top"/>
 </div>
 </template>
 <script>
 import NavBar from "components/common/navbar/NavBar"
 import TabControl from "components/content/TabControl"
 import GoodsList from 'components/content/goods/GoodsList'
+import Scroll from "components/common/scroll/Scroll"
+import BackTop from 'components/content/backTop/BackTop'
+
 import HomeSwiper from "./childComps/HomeSwiper"
 import RecommendView from './childComps/RecommendView'
 import FeatureView from './childComps/FeatureView'
 import {getHomeMultidata,getHomeGoods} from "network/home";
+
   export default {
     name: "Home",
     components: {
       NavBar,
       TabControl,
+      Scroll,
+      BackTop,
       GoodsList,
       HomeSwiper,
       RecommendView,
       FeatureView
+ 
     },
     data(){
       return{
@@ -36,7 +46,8 @@ import {getHomeMultidata,getHomeGoods} from "network/home";
           'new':{page:0,list:[]},
           'sell':{page:0,list:[]},
         },
-        currentType:'pop'
+        currentType:'pop',
+        scroll:null
       }
     },
   created(){
@@ -93,10 +104,12 @@ import {getHomeMultidata,getHomeGoods} from "network/home";
 <style scoped>
 #home{
   padding-top: 44px;
+  height: 100vh;
+  position: relative;
 }
 .home-nav{
   background-color: var(--color-tint);
-  color:#fff;
+  color:rgb(2, 1, 1);
   position: fixed;
   left: 0;
   right: 0;
@@ -109,4 +122,12 @@ import {getHomeMultidata,getHomeGoods} from "network/home";
   background: #fff;
   z-index: 9;
 }
+.content{
+  position: absolute;
+  top:44px;
+  bottom: 49px;
+  left: 0px;
+  right: 0px;
+}
+
 </style>

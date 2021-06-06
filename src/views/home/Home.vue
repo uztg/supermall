@@ -2,14 +2,14 @@
 <div id="home">
 <router-view />
 <nav-bar class="home-nav" ><div slot="center">购物街</div></nav-bar>
-  <scroll class="content">
+  <scroll class="content" ref="scroll" :probe-type="3" @scroll="contentScroll">
     <home-swiper :banners="banners" />
     <recommend-view :recommends="recommends"/>
     <feature-view class="feature" />
     <tab-control class="tab-control" :titles="['流行','新款','精选']" @tabClick="tabClick"/>
     <goods-list :goods="showGoods"/>
   </scroll>
-  <back-top class="back-top"/>
+  <back-top @click.native="TopClick" v-show="isActive" />
 </div>
 </template>
 <script>
@@ -35,7 +35,6 @@ import {getHomeMultidata,getHomeGoods} from "network/home";
       HomeSwiper,
       RecommendView,
       FeatureView
- 
     },
     data(){
       return{
@@ -47,7 +46,7 @@ import {getHomeMultidata,getHomeGoods} from "network/home";
           'sell':{page:0,list:[]},
         },
         currentType:'pop',
-        scroll:null
+        isActive:false
       }
     },
   created(){
@@ -62,7 +61,7 @@ import {getHomeMultidata,getHomeGoods} from "network/home";
   computed:{
     showGoods(){
       return this.goods[this.currentType].list
-    }
+    },
   },
   methods:{
     // 网络请求相关的方法
@@ -84,7 +83,6 @@ import {getHomeMultidata,getHomeGoods} from "network/home";
 
     //事件监听的方法
     tabClick(index){
-      //console.log(index)
       switch(index){
         case 0 :
           this.currentType = 'pop'
@@ -96,6 +94,16 @@ import {getHomeMultidata,getHomeGoods} from "network/home";
           this.currentType = 'sell'
           break
       }
+    },
+    TopClick(){
+      this.$refs.scroll.scroll.scrollTo(0,0,300)
+      /*用this.$refs.scroll获取组件，然后获取组件中srcoll属性，再调用它的srcollTo方法，看起来很复杂
+        说清楚就OK了
+      */
+    },
+    //监听滚动
+    contentScroll(position){
+      this.isActive = (-position.y)>1000
     }
   }
   }
@@ -129,5 +137,7 @@ import {getHomeMultidata,getHomeGoods} from "network/home";
   left: 0px;
   right: 0px;
 }
-
+.active{
+  display: none;
+}
 </style>

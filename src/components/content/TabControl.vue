@@ -35,6 +35,8 @@ export default {
     text-align: center;
     height: 44px;
     line-height: 44px;
+    background: #fff;
+    margin-top: -1px;
 }
 .tab-control div{
     flex: 1;

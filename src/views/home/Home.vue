@@ -2,14 +2,17 @@
 <div id="home">
 <router-view />
 <nav-bar class="home-nav" ><div slot="center">购物街</div></nav-bar>
-  <scroll class="content" ref="scroll" :probe-type="3" @scroll="contentScroll">
+  <scroll class="content"
+          ref="scroll"
+          :probe-type="3"
+          @scroll="contentScroll">
     <home-swiper :banners="banners" />
     <recommend-view :recommends="recommends"/>
     <feature-view class="feature" />
     <tab-control class="tab-control" :titles="['流行','新款','精选']" @tabClick="tabClick"/>
     <goods-list :goods="showGoods"/>
   </scroll>
-  <back-top @click.native="TopClick" v-show="isActive" />
+  <back-top @click.native="backClick" v-show="isShowBackTop"/>
 </div>
 </template>
 <script>
@@ -46,7 +49,7 @@ import {getHomeMultidata,getHomeGoods} from "network/home";
           'sell':{page:0,list:[]},
         },
         currentType:'pop',
-        isActive:false
+        isShowBackTop:false
       }
     },
   created(){
@@ -56,6 +59,13 @@ import {getHomeMultidata,getHomeGoods} from "network/home";
     this.getHomeGoods('pop'),
     this.getHomeGoods('new'),
     this.getHomeGoods('sell')
+  },
+  mounted(){
+        //监听item中的图片加载完成
+      // const refresh = this.debounce(this.$refs.scroll.refresh,500)
+      this.$bus.$on('itemImageLoad',()=>{
+         this.$refs.scroll && this.$refs.scroll.scroll.refresh()
+    })
   },
   //为了让代码看起来更简洁
   computed:{
@@ -80,7 +90,16 @@ import {getHomeMultidata,getHomeGoods} from "network/home";
         this.goods[type].page+=1
       })
     },
-
+    //  防抖函数
+    debounce(func,delay){
+      let timer = null;
+      return function(...args){
+        if(timer) clearTimeout(timer)
+        timer = setTimeout(()=>{
+          func.apply(this,args)
+        },delay)
+      }
+    },
     //事件监听的方法
     tabClick(index){
       switch(index){
@@ -95,15 +114,15 @@ import {getHomeMultidata,getHomeGoods} from "network/home";
           break
       }
     },
-    TopClick(){
-      this.$refs.scroll.scroll.scrollTo(0,0,300)
+    backClick(){
+      this.$refs.scroll.scrollTo(0,0)
       /*用this.$refs.scroll获取组件，然后获取组件中srcoll属性，再调用它的srcollTo方法，看起来很复杂
         说清楚就OK了
       */
     },
     //监听滚动
-    contentScroll(position){
-      this.isActive = (-position.y)>1000
+    contentScroll(position) {
+      this.isShowBackTop = (-position.y) > 1000
     }
   }
   }
@@ -130,14 +149,13 @@ import {getHomeMultidata,getHomeGoods} from "network/home";
   background: #fff;
   z-index: 9;
 }
-.content{
+.content {
+  overflow: hidden;
+
   position: absolute;
-  top:44px;
+  top: 44px;
   bottom: 49px;
-  left: 0px;
-  right: 0px;
-}
-.active{
-  display: none;
+  left: 0;
+  right: 0;
 }
 </style>

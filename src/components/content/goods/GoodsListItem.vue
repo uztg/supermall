@@ -1,5 +1,5 @@
 <template>
-    <div class="goods-item">
+    <div class="goods-item" @click="itemClick()">
         <img :src="goodsitem.show.img" alt="" @load="imageLoad">
         <div class="goods-info">
             <p>{{goodsitem.title}}</p>
@@ -9,7 +9,6 @@
     </div>
 </template>
 <script>
-
 export default {
     name:'GoodsListItem',
     props:{
@@ -20,9 +19,22 @@ export default {
             }
         }
     },
+    data(){
+      return{
+        id:null
+      }
+    },
     methods:{
       imageLoad(){
         this.$bus.$emit('itemImageLoad')//发射事件到 事件总线
+      },
+      itemClick(){
+        this.$router.push({
+          // path: `/detail`,
+          // query:{iid:this.goodsitem.iid}
+             path: `/detail/`+this.goodsitem.iid,
+          
+        })
       }
     }
 }

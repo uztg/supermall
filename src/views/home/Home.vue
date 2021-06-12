@@ -62,7 +62,8 @@ import {getHomeMultidata,getHomeGoods} from "network/home";
         currentType:'pop',
         isShowBackTop:false,
         tabOffsetTop:0,
-        isTabFixed:false
+        isTabFixed:false,
+        saveY:0
       }
     },
   created(){
@@ -72,6 +73,16 @@ import {getHomeMultidata,getHomeGoods} from "network/home";
     this.getHomeGoods('pop'),
     this.getHomeGoods('new'),
     this.getHomeGoods('sell')
+  },
+
+  activated(){
+    //进入的时候
+    this.$refs.scroll.scrollTo(0,this.saveY,0)
+    this.$refs.scroll.refresh()// 解决一些小问题
+  },
+  deactivated(){
+    console.log(this.saveY)
+    this.saveY = this.$refs.scroll.scroll.y
   },
   mounted(){
         //监听item中的图片加载完成
@@ -133,6 +144,7 @@ import {getHomeMultidata,getHomeGoods} from "network/home";
       this.isShowBackTop = (-position.y) > 1000
       //决定 tabcontrol 是否吸顶(positon:fixed)
       this.isTabFixed = (-position.y)>=this.tabOffsetTop
+      // this.saveY = position.y //这里直接把坐标给 saveY 就行了
       
     },
     //加载更多

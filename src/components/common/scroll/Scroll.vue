@@ -47,11 +47,11 @@ export default {
     },
     methods: {
       scrollTo(x, y, time=300) {
-        this.scroll.scrollTo(x, y, time)
+        this.scroll && this.scroll.scrollTo(x, y, time)
       },
-    //   refresh(){
-    //       this.srcoll && this.scroll.refresh()//这个监听事件放在 mouted中是为了避免 没有加载到 this.$refs.scroll的问题
-    //   }
+      refresh(){
+          this.srcoll && this.scroll.refresh()//这个监听事件放在 mouted中是为了避免 没有加载到 this.$refs.scroll的问题
+      },
     finishPullUp(){
         this.scroll && this.scroll.finishPullUp()
     }

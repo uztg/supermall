@@ -1,6 +1,6 @@
 <template>
     <div class="goods">
-        <goods-list-item  v-for="(goodsitem,index) in goods" :key='index' :goodsitem='goodsitem' />
+        <goods-list-item  v-for="(goodsitem,index) in goods" :key='index' :goodsitem='goodsitem' @click="goodsItem(index)"/>
     </div>
 </template>
 <script>
@@ -17,7 +17,7 @@ export default {
                 return []
             }
         }
-    }
+    },
 }
 </script>
 <style scoped>

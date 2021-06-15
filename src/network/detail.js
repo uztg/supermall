@@ -28,7 +28,7 @@ export class Shop{
   constructor(shopInfo,score){
     this.fans = shopInfo.cFans
     this.name = shopInfo.name
-    this.cSells = shopInfo.cSells
+    this.sells = shopInfo.cSells
     this.score = shopInfo.score
     this.logo = shopInfo.shopLogo
     this.goodsCount = shopInfo.cGoods

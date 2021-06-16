@@ -14,7 +14,7 @@ export function getDetail(id){
 export class Goods {
   constructor(itemInfo, columns, services) {
     this.title = itemInfo.title
-    this.desc = itemInfo.desc
+    // this.desc = itemInfo.desc
     this.newPrice = itemInfo.price
     this.oldPrice = itemInfo.oldPrice
     this.discount = itemInfo.discountDesc
@@ -32,5 +32,13 @@ export class Shop{
     this.score = shopInfo.score
     this.logo = shopInfo.shopLogo
     this.goodsCount = shopInfo.cGoods
+  }
+}
+export class GoodsParam {
+  constructor(info,rule){
+    //注：images 可能没有值(某些商品有值，某些没有值)
+    this.image = info.images ? info.images[0] : '';
+    this.infos = info.set;
+    this.sizes = rule.tables;
   }
 }

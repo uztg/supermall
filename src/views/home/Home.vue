@@ -31,7 +31,7 @@ import TabControl from "components/content/TabControl"
 import GoodsList from 'components/content/goods/GoodsList'
 import Scroll from "components/common/scroll/Scroll"
 import BackTop from 'components/content/backTop/BackTop'
-import {debounce} from "common/utils"
+import { imageLearnnerMixIn } from 'common/mixin'
 
 import HomeSwiper from "./childComps/HomeSwiper"
 import RecommendView from './childComps/RecommendView'
@@ -40,6 +40,7 @@ import {getHomeMultidata,getHomeGoods} from "network/home";
 
   export default {
     name: "Home",
+    mixins:[imageLearnnerMixIn],
     components: {
       NavBar,
       TabControl,
@@ -63,7 +64,7 @@ import {getHomeMultidata,getHomeGoods} from "network/home";
         isShowBackTop:false,
         tabOffsetTop:0,
         isTabFixed:false,
-        saveY:0
+        saveY:0,
       }
     },
   created(){
@@ -78,18 +79,16 @@ import {getHomeMultidata,getHomeGoods} from "network/home";
   activated(){
     //进入的时候
     this.$refs.scroll.scrollTo(0,this.saveY,0)
-    this.$refs.scroll.refresh()// 解决一些小问题
+    this.newRefresh() //解决一些小问题
   },
   deactivated(){
     console.log(this.saveY)
     this.saveY = this.$refs.scroll.scroll.y
+
+    //取消事件监听
+    this.$bus.$off('imageLoad',this.itemLearnner)
   },
   mounted(){
-        //监听item中的图片加载完成
-      // const refresh = debounce(this.$refs.scroll.refresh,500)
-      this.$bus.$on('itemImageLoad',()=>{
-      this.$refs.scroll && this.$refs.scroll.scroll.refresh()
-    })
   },
   //为了让代码看起来更简洁
   computed:{
@@ -129,6 +128,7 @@ import {getHomeMultidata,getHomeGoods} from "network/home";
           this.currentType = 'sell'
           break
       }
+      //为了保持一致
       this.$refs.tabControl1.currentIndex = index
       this.$refs.tabControl2.currentIndex = index
     },

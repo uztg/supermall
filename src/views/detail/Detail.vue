@@ -1,6 +1,6 @@
 <template>
     <div id="detail">
-        <detail-nav-bar class="detail-nav"/>
+        <detail-nav-bar class="detail-nav" @titleClick="titleClick"/>
         <scroll class="detail-content" ref="scroll">
             <detail-swiper :topImages="topImages"/>
             <detail-base-info :goods='goods'/>
@@ -8,12 +8,13 @@
             <detail-goods-info :detailInfo='detailInfo' @imageLoad='imageLoad'/>
             <detail-param-info :paramInfo='paramInfo'/>
             <detail-comment-info :commentInfo='commentInfo'/>
+            <goods-list :goods='recommends'/>
         </scroll>
     </div>
 </template>
 <script>
-import {getDetail,Goods,Shop,GoodsParam} from 'network/detail'
-
+import {getDetail,Goods,Shop,GoodsParam,getRecommend1} from 'network/detail'
+import { imageLearnnerMixIn } from 'common/mixin'
 
 import DetailNavBar from './childComps/DetailNavBar'
 import DetailSwiper from './childComps/DetailSwiper'
@@ -22,6 +23,7 @@ import DetailShopInfo from './childComps/DetailShopInfo'
 import DetailGoodsInfo from './childComps/DetailGoodsInfo'
 import DetailParamInfo from './childComps/DetailParamInfo'
 import DetailCommentInfo from './childComps/DetailCommentInfo'
+import GoodsList from 'components/content/goods/GoodsList'
 import Scroll from "components/common/scroll/Scroll"
 
 
@@ -34,9 +36,11 @@ export default{
       DetailGoodsInfo,
       DetailParamInfo,
       DetailCommentInfo,
+      GoodsList,
       Scroll
     },
     name:"Detail",
+    mixins:[imageLearnnerMixIn],
     data(){
         return {
             iid:null,
@@ -46,13 +50,15 @@ export default{
             shop:{},
             detailInfo:{},
             paramInfo:{},
-            commentInfo:{}
+            commentInfo:{},
+            recommends:[],
+            themeTopYs:[0,1000,2000,3000]
         }
     },
     created(){
         this.iid = this.$route.params.iid;
         getDetail(this.iid).then(res=>{
-            console.log(res)
+            // console.log(res)
             const data = res.result
             //1.获取轮播图
             this.topImages = data.itemInfo.topImages
@@ -69,11 +75,25 @@ export default{
                 this.commentInfo = data.rate.list[0]
             }
         });
+        getRecommend1().then(res=>{
+            console.log(res.data.list)
+            this.recommends = res.data.list
+        });
         
+    },
+    mounted(){
+    },
+    destroy(){
+        this.$bus.$off('imageLoad',this.itemLearnner)
     },
     methods:{
         imageLoad(){
-            this.$refs.scroll.refresh()
+            this.newRefresh()
+            // this.$refs.scroll.refresh()
+        },
+        titleClick(index){
+            console.log(index)
+            this.$refs.scroll.scrollTo(0,-this.themeTopYs[index],100)
         }
     }
 }

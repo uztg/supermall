@@ -33,10 +33,10 @@ export default {
     methods:{
         imageLoad(){
             //判断所有的图片都加载完了，进行一次回调就可以了。
-            this.counter+=1
-            if(this.count==this.imageslength){
+            // this.counter+=1
+            // if(this.count==this.imageslength){
                 this.$emit("imageLoad")
-            }
+            // }
             console.log("------")
         }
     },

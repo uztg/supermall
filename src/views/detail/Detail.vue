@@ -1,6 +1,6 @@
 <template>
     <div id="detail">
-        <detail-nav-bar class="detail-nav" @titleClick="titleClick"/>
+        <detail-nav-bar class="detail-nav" @titleClick="titleClick" ref="nav"/>
         <scroll 
         class="detail-content" 
         ref="scroll" 
@@ -14,6 +14,7 @@
             <detail-comment-info ref='comment' :commentInfo='commentInfo'/>
             <goods-list ref='recommend' :goods='recommends'/>
         </scroll>
+        <detail-bottom-bar />
     </div>
 </template>
 <script>
@@ -27,6 +28,8 @@ import DetailShopInfo from './childComps/DetailShopInfo'
 import DetailGoodsInfo from './childComps/DetailGoodsInfo'
 import DetailParamInfo from './childComps/DetailParamInfo'
 import DetailCommentInfo from './childComps/DetailCommentInfo'
+import DetailBottomBar from './childComps/DetailBottomBar'
+
 import GoodsList from 'components/content/goods/GoodsList'
 import Scroll from "components/common/scroll/Scroll"
 
@@ -41,6 +44,7 @@ export default{
       DetailParamInfo,
       DetailCommentInfo,
       GoodsList,
+      DetailBottomBar,
       Scroll
     },
     name:"Detail",
@@ -56,7 +60,7 @@ export default{
             paramInfo:{},
             commentInfo:{},
             recommends:[],
-            themeTopYs:[]
+            themeTopYs:[],
         }
     },
     created(){
@@ -112,7 +116,10 @@ export default{
             this.themeTopYs.push(this.$refs.param.$el.offsetTop);
             this.themeTopYs.push(this.$refs.comment.$el.offsetTop);
             this.themeTopYs.push(this.$refs.recommend.$el.offsetTop);
-            console.log(this.themeTopYs)
+            // console.log(this.themeTopYs)
+
+            //故意传入一个最大值 方便下面使用
+            this.themeTopYs.push(Number.MAX_VALUE);
         },
         titleClick(index){
             console.log(index)
@@ -121,6 +128,13 @@ export default{
         contentScroll(position){
             const positionY = -position.y
             // console.log(positionY)
+            length=this.themeTopYs.length
+            for (let i = 0;i<length-1;i++) {
+                if(this.$refs.nav.currentIndex != i &&(this.themeTopYs[i]<= positionY && positionY < this.themeTopYs[i+1])){
+                   this.$refs.nav.currentIndex = i
+                   console.log(i)
+                }
+            }
         }
     }
 }
@@ -131,6 +145,7 @@ export default{
     z-index: 9;
     background-color: #fff;
     height: 100vh;
+
 }
 .detail-content{
     height: calc(100% - 44px);

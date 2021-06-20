@@ -150,7 +150,8 @@ export default{
             product.desc = this.goods.desc;
             product.price = this.goods.newPrice;
             product.iid = this.iid
-            console.log(product)
+            // console.log(product)
+            this.$store.commit('addCart',product)
         }
     }
 }

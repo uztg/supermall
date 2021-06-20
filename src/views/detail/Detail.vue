@@ -14,7 +14,8 @@
             <detail-comment-info ref='comment' :commentInfo='commentInfo'/>
             <goods-list ref='recommend' :goods='recommends'/>
         </scroll>
-        <detail-bottom-bar />
+        <back-top @click.native="backClick" v-show="isShowBackTop"/>
+        <detail-bottom-bar @addToCart="addToCart"/>
     </div>
 </template>
 <script>
@@ -32,6 +33,7 @@ import DetailBottomBar from './childComps/DetailBottomBar'
 
 import GoodsList from 'components/content/goods/GoodsList'
 import Scroll from "components/common/scroll/Scroll"
+import { BackTopMixin } from 'common/mixin'
 
 
 export default{
@@ -48,7 +50,7 @@ export default{
       Scroll
     },
     name:"Detail",
-    mixins:[imageLearnnerMixIn],
+    mixins:[imageLearnnerMixIn,BackTopMixin],
     data(){
         return {
             iid:null,
@@ -135,6 +137,20 @@ export default{
                    console.log(i)
                 }
             }
+            //决定backtop 是否显示
+            this.isShowBackTop = (-position.y) > 1000
+            //决定 tabcontrol 是否吸顶(positon:fixed)
+            this.isTabFixed = (-position.y)>=this.tabOffsetTop
+            // this.saveY = position.y //这里直接把坐标给 saveY 就行了
+        },
+        addToCart(){
+            const product = {}
+            product.image = this.topImages[0];
+            product.title = this.goods.title;
+            product.desc = this.goods.desc;
+            product.price = this.goods.newPrice;
+            product.iid = this.iid
+            console.log(product)
         }
     }
 }

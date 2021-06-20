@@ -30,8 +30,7 @@ import NavBar from "components/common/navbar/NavBar"
 import TabControl from "components/content/TabControl"
 import GoodsList from 'components/content/goods/GoodsList'
 import Scroll from "components/common/scroll/Scroll"
-import BackTop from 'components/content/backTop/BackTop'
-import { imageLearnnerMixIn } from 'common/mixin'
+import { imageLearnnerMixIn,BackTopMixin } from 'common/mixin'
 
 import HomeSwiper from "./childComps/HomeSwiper"
 import RecommendView from './childComps/RecommendView'
@@ -40,12 +39,11 @@ import {getHomeMultidata,getHomeGoods} from "network/home";
 
   export default {
     name: "Home",
-    mixins:[imageLearnnerMixIn],
+    mixins:[imageLearnnerMixIn,BackTopMixin],
     components: {
       NavBar,
       TabControl,
       Scroll,
-      BackTop,
       GoodsList,
       HomeSwiper,
       RecommendView,
@@ -61,7 +59,6 @@ import {getHomeMultidata,getHomeGoods} from "network/home";
           'sell':{page:0,list:[]},
         },
         currentType:'pop',
-        isShowBackTop:false,
         tabOffsetTop:0,
         isTabFixed:false,
         saveY:0,
@@ -131,12 +128,6 @@ import {getHomeMultidata,getHomeGoods} from "network/home";
       //为了保持一致
       this.$refs.tabControl1.currentIndex = index
       this.$refs.tabControl2.currentIndex = index
-    },
-    backClick(){
-      this.$refs.scroll.scrollTo(0,0)
-      /*用this.$refs.scroll获取组件，然后获取组件中srcoll属性，再调用它的srcollTo方法，看起来很复杂
-        说清楚就OK了
-      */
     },
     //监听滚动
     contentScroll(position) {

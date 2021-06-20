@@ -15,14 +15,19 @@
       </div>
     </div>
     <div class="bar-item bar-right">
-      <div class="cart">加入购物车</div>
+      <div class="cart" @click="addToCart">加入购物车</div>
       <div class="buy">购买</div>
     </div>
   </div>
 </template>
 <script>
 export default {
-    name:'DetailButtomBar'
+    name:'DetailButtomBar',
+    methods:{
+      addToCart(){
+        this.$emit('addToCart')
+      }
+    }
 }
 </script>
 <style scoped>

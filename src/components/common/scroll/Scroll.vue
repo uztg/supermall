@@ -51,7 +51,7 @@ export default {
       },
       refresh(){
 
-          console.log('ceshi')
+        //   console.log('ceshi')
           this.srcoll && this.scroll.refresh()//这个监听事件放在 mouted中是为了避免 没有加载到 this.$refs.scroll的问题
       },
     finishPullUp(){

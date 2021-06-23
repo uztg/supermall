@@ -68,7 +68,7 @@ export default{
     created(){
         this.iid = this.$route.params.iid;
         getDetail(this.iid).then(res=>{
-            // console.log(res)
+            console.log(res)
             const data = res.result
             //1.获取轮播图
             this.topImages = data.itemInfo.topImages
@@ -148,10 +148,11 @@ export default{
             product.image = this.topImages[0];
             product.title = this.goods.title;
             product.desc = this.goods.desc;
-            product.price = this.goods.newPrice;
+            product.price = this.goods.realPrice;
             product.iid = this.iid
             // console.log(product)
-            this.$store.commit('addCart',product)
+            // this.$store.commit('addCart',product)
+            this.$store.dispatch('addCart',product)
         }
     }
 }

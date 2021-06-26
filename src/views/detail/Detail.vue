@@ -16,7 +16,6 @@
         </scroll>
         <back-top @click.native="backClick" v-show="isShowBackTop"/>
         <detail-bottom-bar @addToCart="addToCart"/>
-        <toast :message="message" :show='show' />
     </div>
 </template>
 <script>
@@ -155,7 +154,7 @@ export default{
             // console.log(product)
             // this.$store.commit('addCart',product)
             this.$store.dispatch('addCart',product).then(res=>{
-                console.log(this.$toast)
+                // console.log(this.$toast)
                 this.$toast.show(res,2000)
         })
     }}

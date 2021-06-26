@@ -1,12 +1,13 @@
 <template>
     <div class="cart-bottom-bar">
-        <div class="item-selector">
-            <check-button class="button"></check-button>
+        <div class="item-selector"  @click="selectAll">
+            <check-button class="button" :isChecked='isSelectAll'></check-button>
             <span>全选</span>
         </div>
         <div class="price">
             合计:{{totalPrice}}
         </div>
+        <div class="calculate" @click="calClick">去计算:{{checkedLength}}</div>
     </div>
 </template>
 <script>
@@ -29,8 +30,37 @@ export default {
             //     }
             // }
             // return sum
+
+            return "￥"+this.cartList.filter(item=>{
+                return item.checked
+            }).reduce((preValue,item)=>{
+                return preValue+item.price *item.count
+            },0)//视频中的方法 看会了。多看多写多学
+    },
+    checkedLength(){
+        return this.cartList.filter(item=>{
+            return item.checked
+        }).length
+    },
+    isSelectAll(){
+        return !(this.cartList.filter(item => !item.checked).length) && this.cartList.length != 0
     }
-}}
+    },
+    methods:{
+        selectAll(){ 
+            if(this.isSelectAll){//全部选中
+                this.cartList.forEach(item => item.checked=false);
+            }else{//有部分或者全部没选中
+                this.cartList.forEach(item => item.checked=true);
+            }
+        },
+        calClick(){
+            if(!this.isSelectAll){
+                this.$toast.show('请选择购买的商品',2000)
+            }
+        }
+    }
+}
 </script>
 <style scoped>
 .cart-bottom-bar{
@@ -44,14 +74,24 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    position: relative;
-    bottom: -8px;
-    left: 10px;
+    margin-left: 10px;
 }
 .item-selector span{
     float: right;
 }
 .price{
     margin-left: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.calculate{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: auto;
+    background: red;
+    padding: 0 15px;
+    color: #fff;
 }
 </style>

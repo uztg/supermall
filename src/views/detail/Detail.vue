@@ -16,6 +16,7 @@
         </scroll>
         <back-top @click.native="backClick" v-show="isShowBackTop"/>
         <detail-bottom-bar @addToCart="addToCart"/>
+        <toast :message="message" :show='show' />
     </div>
 </template>
 <script>
@@ -35,7 +36,6 @@ import GoodsList from 'components/content/goods/GoodsList'
 import Scroll from "components/common/scroll/Scroll"
 import { BackTopMixin } from 'common/mixin'
 
-
 export default{
     components: { 
       DetailNavBar,
@@ -47,7 +47,7 @@ export default{
       DetailCommentInfo,
       GoodsList,
       DetailBottomBar,
-      Scroll
+      Scroll,
     },
     name:"Detail",
     mixins:[imageLearnnerMixIn,BackTopMixin],
@@ -63,6 +63,8 @@ export default{
             commentInfo:{},
             recommends:[],
             themeTopYs:[],
+            message:'',
+            show:false
         }
     },
     created(){
@@ -152,9 +154,11 @@ export default{
             product.iid = this.iid
             // console.log(product)
             // this.$store.commit('addCart',product)
-            this.$store.dispatch('addCart',product)
-        }
-    }
+            this.$store.dispatch('addCart',product).then(res=>{
+                console.log(this.$toast)
+                this.$toast.show(res,2000)
+        })
+    }}
 }
 </script>
 <style scoped>
